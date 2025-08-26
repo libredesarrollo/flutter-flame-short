@@ -1,4 +1,4 @@
-# Bases – Curso Flutter + Flame (flame-curso-libro-bases-01)
+# Bases – Curso Flutter + Flame (flame-primeros-pasos)
 
 ***Veremos un enfoque práctico a las características de Flame, como las clases tipo Game, componentes principales de Flame, entrada de teclado, tap y colisiones.***
 
