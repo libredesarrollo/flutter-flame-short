@@ -90,7 +90,7 @@ class MySpriteSheet extends SpriteComponent with HasGameReference {
 }
 
 class MySpriteAnimationSheet extends SpriteAnimationComponent
-    with HasGameReference, TapCallbacks {
+    with HasGameReference, TapCallbacks, KeyboardHandler {
   MySpriteAnimationSheet() : super(size: Vector2.all(256));
 
   late double centerX;
@@ -102,7 +102,7 @@ class MySpriteAnimationSheet extends SpriteAnimationComponent
   final double spriteWidth = 680.0;
   final double spriteHeight = 472.0;
 
-   int animationIndex = 0;
+  int animationIndex = 0;
 
   late SpriteAnimation dinoAnimation;
   late SpriteAnimation deadAnimation;
@@ -117,31 +117,51 @@ class MySpriteAnimationSheet extends SpriteAnimationComponent
     super.update(dt);
   }
 
+  // @override
+  // void onTapUp(TapUpEvent event) {
+  //   // print("Player tap up on ${event.localPosition}");
+  //   animationIndex++;
+  //   if (animationIndex > 4) animationIndex = 0;
+  //   switch (animationIndex) {
+  //     case 1:
+  //       animation = idleAnimation;
+  //       break;
+  //     case 2:
+  //       animation = jumpAnimation;
+  //       break;
+  //     case 3:
+  //       animation = walkAnimation;
+  //       break;
+  //     case 4:
+  //       animation = runAnimation;
+  //       break;
+  //     case 0:
+  //     default:
+  //       animation = deadAnimation;
+  //       break;
+  //   }
+  //   super.onTapUp(event);
+  // }
 
-@override
-  void onTapUp(TapUpEvent event) {
-    // print("Player tap up on ${event.localPosition}");
-    animationIndex++;
-    if (animationIndex > 4) animationIndex = 0;
-    switch (animationIndex) {
-      case 1:
-        animation = idleAnimation;
-        break;
-      case 2:
-        animation = jumpAnimation;
-        break;
-      case 3:
-        animation = walkAnimation;
-        break;
-      case 4:
-        animation = runAnimation;
-        break;
-      case 0:
-      default:
-        animation = deadAnimation;
-        break;
+  @override
+  bool onKeyEvent(KeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
+
+    if (keysPressed.isEmpty) {
+      animation = idleAnimation;
     }
-    super.onTapUp(event);
+    if (keysPressed.contains(LogicalKeyboardKey.arrowRight) ||
+        keysPressed.contains(LogicalKeyboardKey.keyD)) {
+      animation = walkAnimation;
+      // flipHorizontally();
+      flipVertically();
+      position.x+=5;
+    }
+    if (keysPressed.contains(LogicalKeyboardKey.arrowLeft) ||
+        keysPressed.contains(LogicalKeyboardKey.keyA)) {
+      animation = walkAnimation;
+      position.x-=5;
+    }
+    return true;
   }
 
   @override
@@ -201,7 +221,7 @@ class MySpriteAnimationSheet extends SpriteAnimationComponent
       stepTime: .08,
     );
     // end animation
-    animation = runAnimation;
+    animation = idleAnimation;
 
     centerX = (screenWidth / 2);
     centerY = (screenHeight / 2);
@@ -233,7 +253,6 @@ class MyRect extends PositionComponent {
     return super.onLoad();
   }
 
-
   @override
   void render(Canvas canvas) {
     canvas.drawRect(
@@ -245,7 +264,7 @@ class MyRect extends PositionComponent {
   }
 }
 
-class MyGame extends FlameGame /*with KeyboardEvents, TapDetector*/ {
+class MyGame extends FlameGame with HasKeyboardHandlerComponents /*with KeyboardEvents, TapDetector*/ {
   @override
   FutureOr<void> onLoad() async {
     // await add(MySprite());
@@ -255,11 +274,11 @@ class MyGame extends FlameGame /*with KeyboardEvents, TapDetector*/ {
     // await add(MyRect());
     return super.onLoad();
   }
-// @override
-//   void onTapUp(TapUpInfo info) {
-//     print("Player tap up on ${info.eventPosition.global}");
-//     super.onTapUp(info);
-//   }
+  // @override
+  //   void onTapUp(TapUpInfo info) {
+  //     print("Player tap up on ${info.eventPosition.global}");
+  //     super.onTapUp(info);
+  //   }
 
   // @override
   // KeyEventResult onKeyEvent(
