@@ -111,6 +111,8 @@ class MySpriteAnimationSheet extends SpriteAnimationComponent
   late SpriteAnimation runAnimation;
   late SpriteAnimation walkAnimation;
 
+  bool right = true;
+
   @override
   void update(double dt) {
     // position = Vector2(centerX++, centerY++);
@@ -145,7 +147,6 @@ class MySpriteAnimationSheet extends SpriteAnimationComponent
 
   @override
   bool onKeyEvent(KeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
-
     if (keysPressed.isEmpty) {
       animation = idleAnimation;
     }
@@ -153,13 +154,17 @@ class MySpriteAnimationSheet extends SpriteAnimationComponent
         keysPressed.contains(LogicalKeyboardKey.keyD)) {
       animation = walkAnimation;
       // flipHorizontally();
-      flipVertically();
-      position.x+=5;
+      if (!right) flipHorizontally();
+      right = true;
+
+      position.x += 5;
     }
     if (keysPressed.contains(LogicalKeyboardKey.arrowLeft) ||
         keysPressed.contains(LogicalKeyboardKey.keyA)) {
       animation = walkAnimation;
-      position.x-=5;
+      if (right) flipHorizontally();
+      right = false;
+      position.x -= 5;
     }
     return true;
   }
@@ -168,6 +173,8 @@ class MySpriteAnimationSheet extends SpriteAnimationComponent
   FutureOr<void> onLoad() async {
     screenWidth = game.size.x;
     screenHeight = game.size.y;
+
+    anchor = Anchor.center;
 
     var spriteImages = await Flame.images.load('dinofull.png');
 
@@ -264,7 +271,8 @@ class MyRect extends PositionComponent {
   }
 }
 
-class MyGame extends FlameGame with HasKeyboardHandlerComponents /*with KeyboardEvents, TapDetector*/ {
+class MyGame extends FlameGame
+    with HasKeyboardHandlerComponents /*with KeyboardEvents, TapDetector*/ {
   @override
   FutureOr<void> onLoad() async {
     // await add(MySprite());
