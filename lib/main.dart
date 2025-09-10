@@ -173,7 +173,7 @@ class MySpriteAnimationSheet extends SpriteAnimationComponent
   FutureOr<void> onLoad() async {
     screenWidth = game.size.x;
     screenHeight = game.size.y;
-
+    debugMode = true;
     anchor = Anchor.center;
 
     var spriteImages = await Flame.images.load('dinofull.png');
@@ -317,3 +317,7 @@ class MyCircle2 extends Game {
     // TODO: implement update
   }
 }
+
+
+
+// TODO dt movimiento
